@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roda Haiwan Membiak — Sains Tahun 2</title>
+<style>
+:root{--navy:#173b68;--green:#2f9e66;--yellow:#ffdc5e;--pink:#ff7ca8;--blue:#68c8ef;--cream:#fffdf3}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS",Arial,sans-serif;color:var(--navy);background:linear-gradient(135deg,#e6f8e9,#e5f5ff 55%,#fff3d0);min-height:100vh}
+header{text-align:center;padding:22px 14px 12px}
+.tag{display:inline-block;background:#fff;border:2px solid #b9e6c6;border-radius:99px;padding:6px 14px;font-weight:800;font-size:.85rem}
+h1{font-size:clamp(1.8rem,5vw,3rem);margin:10px 0 4px;color:#17623f;text-shadow:2px 2px 0 white}
+.subtitle{font-size:1.05rem;margin:0 auto;max-width:720px}
+main{max-width:1100px;margin:0 auto;padding:12px}
+.card{background:rgba(255,255,255,.94);border:3px solid #fff;border-radius:24px;box-shadow:0 8px 22px #17476c1c;padding:18px;margin-bottom:16px}
+.layout{display:grid;grid-template-columns:minmax(260px, .95fr) minmax(300px,1.2fr);gap:18px;align-items:center}
+.wheel-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.pointer{font-size:2rem;line-height:1;color:#f05a69;margin-bottom:-8px;z-index:2}
+#wheel{width:min(100%,360px);height:auto;filter:drop-shadow(0 7px 5px #183b6825)}
+button{font:inherit;font-weight:800;border:0;border-radius:14px;padding:12px 18px;cursor:pointer;transition:transform .12s,filter .12s;box-shadow:0 4px 0 #163b6822}
+button:hover{filter:brightness(1.04);transform:translateY(-1px)}
+button:active{transform:translateY(2px);box-shadow:none}
+.primary{background:#ffcf45;color:#543d00}
+.secondary{background:#d9f5e3;color:#145b38}
+.pink{background:#ffdce8;color:#8c2450}
+button:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.button-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.instructions{background:#f1fbff;border-radius:18px;padding:16px}
+.instructions h2,.question h2{margin-top:0}
+.instructions li{margin:8px 0;line-height:1.4}
+.animal-display{font-size:5rem;text-align:center;line-height:1.15}
+.animal-name{text-align:center;font-size:1.7rem;font-weight:900;margin:4px}
+.question{text-align:center}
+.question-text{font-size:1.25rem;font-weight:800;line-height:1.4;margin:14px auto;max-width:650px}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.option{background:#f3f7ff;color:#173b68;border:2px solid #d7e6f5;text-align:left;min-height:58px}
+.option .letter{display:inline-grid;place-items:center;background:#d8e9ff;border-radius:50%;width:30px;height:30px;margin-right:8px}
+.option.correct{background:#d7f8df;border-color:#35aa62}
+.option.wrong{background:#ffe1e1;border-color:#e66a6a}
+.feedback{min-height:54px;margin-top:14px;padding:12px;border-radius:14px;font-weight:800;line-height:1.45}
+.feedback.good{background:#dcf8e4;color:#17643a}.feedback.bad{background:#fff0d7;color:#7c4a00}.feedback.neutral{background:#f2f6ff}
+.stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+.stat{background:#fff7d6;border-radius:12px;padding:9px 14px;font-weight:800}
+.progress{height:12px;background:#e8eef5;border-radius:99px;overflow:hidden;margin:12px 0}
+.progress div{height:100%;width:0;background:linear-gradient(90deg,#54c878,#ffcf45);transition:width .3s}
+.hidden{display:none!important}
+.small{font-size:.9rem;color:#526b85}
+footer{text-align:center;padding:8px 14px 24px;font-weight:800}
+.result-emoji{font-size:4rem;text-align:center}
+.result-title{text-align:center;font-size:2rem;color:#17623f}
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.95rem}
+th,td{padding:9px;border:1px solid #dbe8ed;text-align:left}th{background:#e8f8ee}
+@media(max-width:720px){.layout{grid-template-columns:1fr}.options{grid-template-columns:1fr}.card{padding:14px}.animal-display{font-size:4rem}}
+@media print{body{background:white}.no-print,header .tag,footer{display:none!important}.card{box-shadow:none;border:1px solid #aaa}.hidden{display:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="tag">🌱 SAINS TAHUN 2 • TAJUK: HAIWAN MEMBIAK</div>
+  <h1>🎡 Roda Haiwan Membiak</h1>
+  <p class="subtitle">Jom kenali haiwan yang <b>bertelur sedikit</b>, <b>bertelur banyak</b>, <b>melahirkan anak sedikit</b> dan <b>melahirkan anak banyak</b>!</p>
+</header>
+<main>
+<section id="start" class="card">
+  <div class="layout">
+    <div class="wheel-wrap">
+      <div class="pointer">▼</div>
+      <canvas id="wheel" width="500" height="500" aria-label="Roda haiwan"></canvas>
+      <button id="startBtn" class="primary">🚀 MULA BERMAIN</button>
+    </div>
+    <div class="instructions">
+      <h2>📘 Cara Bermain</h2>
+      <ol>
+        <li>Masukkan nama jika mahu, kemudian tekan <b>Mula Bermain</b>.</li>
+        <li>Tekan <b>Pusing Roda</b> untuk memilih haiwan secara rawak.</li>
+        <li>Lihat gambar haiwan dan pilih satu daripada empat jawapan.</li>
+        <li>Jawapan betul mendapat <b>10 mata</b>. Jawapan salah tidak menolak markah.</li>
+        <li>Jawab 10 soalan untuk melihat keputusan dan pencapaian anda.</li>
+      </ol>
+      <label for="playerName"><b>Nama murid (pilihan):</b></label>
+      <input id="playerName" type="text" maxlength="40" placeholder="Contoh: Aisyah" style="width:100%;padding:12px;border:2px solid #cfe1ed;border-radius:12px;margin-top:6px;font:inherit">
+      <p class="small">💡 Petua saintis: bilangan telur atau anak boleh berbeza mengikut jenis haiwan. Dalam permainan ini, kita belajar pengelasan secara umum.</p>
+    </div>
+  </div>
+</section>
+
+<section id="game" class="card hidden">
+  <div class="stats">
+    <div class="stat">⭐ Markah: <span id="score">0</span></div>
+    <div class="stat">🧩 Soalan: <span id="qNum">1</span>/10</div>
+    <div class="stat">✅ Betul: <span id="correctCount">0</span></div>
+  </div>
+  <div class="progress"><div id="progressBar"></div></div>
+  <div class="layout">
+    <div class="wheel-wrap">
+      <div class="pointer">▼</div>
+      <canvas id="gameWheel" width="500" height="500"></canvas>
+      <button id="spinBtn" class="primary">🎡 PUSING RODA</button>
+    </div>
+    <div class="question">
+      <div id="animalEmoji" class="animal-display">🐾</div>
+      <div id="animalName" class="animal-name">Haiwan apakah yang akan muncul?</div>
+      <p id="questionText" class="question-text">Tekan “Pusing Roda” untuk memulakan soalan.</p>
+      <div id="options" class="options"></div>
+      <div id="feedback" class="feedback neutral" aria-live="polite">🌟 Bersedia, saintis cilik?</div>
+      <div class="button-row" style="margin-top:12px">
+        <button id="nextBtn" class="secondary hidden">Soalan Seterusnya ➜</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="results" class="card hidden">
+  <div class="result-emoji" id="resultEmoji">🏆</div>
+  <h2 class="result-title" id="resultTitle">Saintis Cilik Hebat!</h2>
+  <p id="resultMessage" style="text-align:center;font-size:1.1rem"></p>
+  <div class="stats">
+    <div class="stat">⭐ Markah: <span id="finalScore"></span>/100</div>
+    <div class="stat">✅ Jawapan betul: <span id="finalCorrect"></span>/10</div>
+    <div class="stat">📊 Pencapaian: <span id="finalPercent"></span>%</div>
+  </div>
+  <h3>📋 Semakan jawapan</h3>
+  <div id="review"></div>
+  <div class="button-row no-print" style="margin-top:18px">
+    <button id="printBtn" class="secondary">🖨️ Cetak Keputusan</button>
+    <button id="replayBtn" class="primary">🔄 Main Semula</button>
+  </div>
+</section>
+</main>
+<footer>💚 Sayang Haiwan • Sayang Alam • Saintis Cilik Berusaha Berjaya! 💚</footer>
+<script>
+const animals = [
+ {name:"Ular",emoji:"🐍",cat:0,explain:"Ular bertelur, tetapi bilangan telurnya berbeza mengikut spesies."},
+ {name:"Ayam",emoji:"🐔",cat:0,explain:"Ayam bertelur. Bilangan telur dalam satu kelompok boleh berbeza."},
+ {name:"Burung",emoji:"🐦",cat:0,explain:"Banyak jenis burung bertelur beberapa biji dalam satu sarang."},
+ {name:"Cicak",emoji:"🦎",cat:0,explain:"Cicak bertelur; bilangan telur biasanya sedikit dalam satu kelompok."},
+ {name:"Itik",emoji:"🦆",cat:0,explain:"Itik bertelur. Bilangan telur berbeza mengikut keadaan dan jenis itik."},
+ {name:"Nyamuk",emoji:"🦟",cat:1,explain:"Nyamuk boleh menghasilkan banyak telur dalam satu kelompok."},
+ {name:"Semut",emoji:"🐜",cat:1,explain:"Ratu semut boleh menghasilkan banyak telur."},
+ {name:"Ikan",emoji:"🐟",cat:1,explain:"Banyak jenis ikan menghasilkan telur yang banyak."},
+ {name:"Katak",emoji:"🐸",cat:1,explain:"Katak biasanya bertelur banyak, selalunya di dalam air."},
+ {name:"Belalang",emoji:"🦗",cat:1,explain:"Belalang bertelur dan boleh menghasilkan banyak telur."},
+ {name:"Kambing",emoji:"🐐",cat:2,explain:"Kambing melahirkan anak; lazimnya satu atau dua ekor pada satu kelahiran."},
+ {name:"Kanggaru",emoji:"🦘",cat:2,explain:"Kanggaru melahirkan anak, biasanya seekor anak pada satu kelahiran."},
+ {name:"Gajah",emoji:"🐘",cat:2,explain:"Gajah melahirkan anak dan biasanya seekor anak pada satu kelahiran."},
+ {name:"Ikan paus",emoji:"🐋",cat:2,explain:"Ikan paus ialah mamalia yang melahirkan anak, biasanya seekor pada satu kelahiran."},
+ {name:"Lembu",emoji:"🐄",cat:2,explain:"Lembu biasanya melahirkan seekor anak pada satu kelahiran."},
+ {name:"Tikus",emoji:"🐭",cat:3,explain:"Tikus biasanya melahirkan beberapa ekor anak dalam satu kelahiran."},
+ {name:"Arnab",emoji:"🐰",cat:3,explain:"Arnab boleh melahirkan beberapa ekor anak dalam satu kelahiran."},
+ {name:"Kucing",emoji:"🐱",cat:3,explain:"Kucing biasanya melahirkan beberapa ekor anak, tetapi bilangannya berbeza."},
+ {name:"Anjing",emoji:"🐶",cat:3,explain:"Anjing biasanya melahirkan beberapa ekor anak dalam satu kelahiran."},
+ {name:"Singa",emoji:"🦁",cat:2,explain:"Singa melahirkan anak; biasanya beberapa ekor atau bilangan yang kecil."}
+];
+const cats=["Bertelur sedikit","Bertelur banyak","Melahirkan anak sedikit","Melahirkan anak banyak"];
+const colors=["#ff8e9e","#ffcf55","#63c9a8","#70b9f5","#b7a0f5","#f6a56f","#7dd5df","#f49ac2"];
+let score=0,correct=0,round=0,deck=[],current=null,answered=false,spinning=false,angle=0,used=[];
+const $=id=>document.getElementById(id);
+function drawWheel(canvas,rotation=0){
+ const ctx=canvas.getContext("2d"),n=animals.length,c=canvas.width/2,r=canvas.width*.45;
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ const step=Math.PI*2/n;
+ for(let i=0;i<n;i++){
+   const start=rotation+i*step-Math.PI/2;
+   ctx.beginPath();ctx.moveTo(c,c);ctx.arc(c,c,r,start,start+step);ctx.closePath();
+   ctx.fillStyle=colors[i%colors.length];ctx.fill();ctx.strokeStyle="#fff";ctx.lineWidth=4;ctx.stroke();
+   ctx.save();ctx.translate(c,c);ctx.rotate(start+step/2);
+   ctx.textAlign="right";ctx.fillStyle="#173b68";ctx.font="bold 17px Arial";
+   ctx.fillText(animals[i].emoji+" "+animals[i].name,r-12,6);
+   ctx.restore();
+ }
+ ctx.beginPath();ctx.arc(c,c,40,0,Math.PI*2);ctx.fillStyle="#fff";ctx.fill();ctx.strokeStyle="#173b68";ctx.lineWidth=5;ctx.stroke();
+ ctx.textAlign="center";ctx.textBaseline="middle";ctx.font="bold 23px Arial";ctx.fillStyle="#17623f";ctx.fillText("JOM!",c,c);
+}
+drawWheel($("wheel"));drawWheel($("gameWheel"));
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startGame(){
+ score=0;correct=0;round=0;used=[];deck=shuffle([...animals]).slice(0,10);
+ $("score").textContent=0;$("correctCount").textContent=0;
+ $("start").classList.add("hidden");$("results").classList.add("hidden");$("game").classList.remove("hidden");
+ $("feedback").className="feedback neutral";$("feedback").textContent="🌟 Bersedia, saintis cilik? Tekan “Pusing Roda”.";
+ $("animalEmoji").textContent="🐾";$("animalName").textContent="Haiwan apakah yang akan muncul?";
+ $("questionText").textContent="Tekan “Pusing Roda” untuk memulakan soalan.";
+ $("options").innerHTML="";$("spinBtn").disabled=false;$("spinBtn").classList.remove("hidden");$("nextBtn").classList.add("hidden");
+ updateProgress();drawWheel($("gameWheel"));
+}
+function updateProgress(){$("qNum").textContent=Math.min(round+1,10);$("progressBar").style.width=(round/10*100)+"%";}
+function spin(){
+ if(spinning||round>=10)return;
+ spinning=true;$("spinBtn").disabled=true;$("options").innerHTML="";$("nextBtn").classList.add("hidden");
+ $("feedback").className="feedback neutral";$("feedback").textContent="🎡 Roda sedang berpusing... bersedia!";
+ current=deck[round];
+ const idx=animals.findIndex(a=>a.name===current.name);
+ const n=animals.length,step=Math.PI*2/n;
+ // Wheel segments are drawn from rotation - PI/2; pointer is at top.
+ const target=-idx*step-step/2;
+ const currentNorm=((angle%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+ let delta=((target-currentNorm)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+ angle+=Math.PI*2*(5+Math.floor(Math.random()*3))+delta;
+ const start=angle-(Math.PI*2*(5+Math.floor(Math.random()*3))+delta); // animation start approximation
+ const from=angle-(Math.PI*2*6+delta),to=angle,duration=2600,t0=performance.now();
+ function animate(now){
+   const p=Math.min(1,(now-t0)/duration),ease=1-Math.pow(1-p,4);
+   drawWheel($("gameWheel"),from+(to-from)*ease);
+   if(p<1)requestAnimationFrame(animate);else{spinning=false;showQuestion();}
+ }
+ requestAnimationFrame(animate);
+}
+function showQuestion(){
+ answered=false;
+ $("animalEmoji").textContent=current.emoji;$("animalName").textContent=current.name;
+ $("questionText").textContent="Bagaimanakah haiwan ini membiak dan dikelaskan secara umum?";
+ const correctCat=current.cat;
+ let opts=[correctCat];
+ while(opts.length<4){let x=Math.floor(Math.random()*4);if(!opts.includes(x))opts.push(x);}
+ shuffle(opts);
+ $("options").innerHTML="";
+ opts.forEach((cat,i)=>{
+  const b=document.createElement("button");b.className="option";
+  b.innerHTML='<span class="letter">'+String.fromCharCode(65+i)+'</span>'+cats[cat];
+  b.addEventListener("click",()=>choose(cat,b));$("options").appendChild(b);
+ });
+ $("feedback").className="feedback neutral";$("feedback").textContent="Pilih satu jawapan yang paling tepat.";
+ $("spinBtn").classList.add("hidden");
+}
+function choose(cat,button){
+ if(answered)return;answered=true;
+ const correctAnswer=cat===current.cat;
+ [...$("options").querySelectorAll("button")].forEach((b,i)=>{
+  b.disabled=true;
+  const label=b.textContent.slice(1).trim();
+  if(label===cats[current.cat])b.classList.add("correct");
+ });
+ if(correctAnswer){score+=10;correct++;$("feedback").className="feedback good";$("feedback").textContent="🎉 TAHNIAH! Jawapan kamu betul! "+current.explain;}
+ else{$("feedback").className="feedback bad";$("feedback").textContent="😊 Tak mengapa, kita belajar bersama! Jawapan yang betul ialah “"+cats[current.cat]+"”. "+current.explain;button.classList.add("wrong");}
+ $("score").textContent=score;$("correctCount").textContent=correct;
+ $("nextBtn").classList.remove("hidden");$("nextBtn").textContent=round===9?"Lihat Keputusan 🏆":"Soalan Seterusnya ➜";
+ $("progressBar").style.width=((round+1)/10*100)+"%";
+}
+function next(){
+ if(!answered)return;
+ round++;
+ if(round>=10){showResults();return;}
+ updateProgress();$("spinBtn").classList.remove("hidden");$("spinBtn").disabled=false;
+ $("animalEmoji").textContent="🐾";$("animalName").textContent="Haiwan seterusnya...";
+ $("questionText").textContent="Tekan “Pusing Roda” untuk memilih haiwan."; $("options").innerHTML="";
+ $("feedback").className="feedback neutral";$("feedback").textContent="Bagus! Teruskan usaha kamu.";
+ $("nextBtn").classList.add("hidden");
+}
+function showResults(){
+ $("game").classList.add("hidden");$("results").classList.remove("hidden");
+ $("finalScore").textContent=score;$("finalCorrect").textContent=correct;$("finalPercent").textContent=score;
+ let title,msg,emo;
+ if(score>=90){title="Saintis Cilik Hebat!";msg="Wah, cemerlang! Kamu sangat mengenali cara haiwan membiak.";emo="🏆";}
+ else if(score>=81){title="Saintis Cilik Cemerlang!";msg="Hebat! Teruskan usaha dan tambah ilmu tentang haiwan.";emo="🌟";}
+ else if(score>=70){title="Pakar Haiwan!";msg="Bagus! Kamu sudah menguasai banyak perkara tentang haiwan.";emo="🥇";}
+ else if(score>=50){title="Penyiasat Haiwan!";msg="Usaha yang baik. Ulang kaji dan cuba lagi untuk markah lebih tinggi.";emo="🔎";}
+ else{title="Teruskan Berusaha, Kamu Pasti Boleh!";msg="Jangan putus asa. Setiap percubaan membantu kamu belajar.";emo="🌱";}
+ $("resultTitle").textContent=title;$("resultMessage").textContent=( $("playerName").value.trim()? "Syabas, "+$("playerName").value.trim()+"! ":"")+msg;$("resultEmoji").textContent=emo;
+ let rows='<table><thead><tr><th>Haiwan</th><th>Pengelasan</th><th>Fakta ringkas</th></tr></thead><tbody>';
+ deck.forEach(a=>{rows+='<tr><td>'+a.emoji+' '+a.name+'</td><td>'+cats[a.cat]+'</td><td>'+a.explain+'</td></tr>';});
+ $("review").innerHTML=rows+'</tbody></table>';
+}
+$("startBtn").addEventListener("click",startGame);$("spinBtn").addEventListener("click",spin);$("nextBtn").addEventListener("click",next);
+$("replayBtn").addEventListener("click",()=>{ $("results").classList.add("hidden");$("start").classList.remove("hidden");drawWheel($("wheel"));});
+$("printBtn").addEventListener("click",()=>window.print());
+</script>
+</body>
+</html>
